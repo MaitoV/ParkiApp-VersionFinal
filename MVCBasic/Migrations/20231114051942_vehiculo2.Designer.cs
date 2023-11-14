@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVCBasic.Migrations
 {
     [DbContext(typeof(EscuelaDatabaseContext))]
-    [Migration("20231031023215_Inicial2")]
-    partial class Inicial2
+    [Migration("20231114051942_vehiculo2")]
+    partial class vehiculo2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,6 +49,27 @@ namespace MVCBasic.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Estudiantes");
+                });
+
+            modelBuilder.Entity("MVCBasic.Models.Vehiculo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Patente")
+                        .IsRequired()
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
+
+                    b.Property<int>("Tipo")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Vehiculos");
                 });
 #pragma warning restore 612, 618
         }
