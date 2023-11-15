@@ -22,8 +22,9 @@ namespace MVCBasic.Controllers
         // GET: Cochera
         public async Task<IActionResult> Index()
         {
-            var escuelaDatabaseContext = _context.Cocheras.Include(c => c.Vehiculo);
-            return View(await escuelaDatabaseContext.ToListAsync());
+              return _context.Cocheras != null ? 
+                          View(await _context.Cocheras.ToListAsync()) :
+                          Problem("Entity set 'EscuelaDatabaseContext.Cocheras'  is null.");
         }
 
         // GET: Cochera/Details/5
@@ -35,7 +36,6 @@ namespace MVCBasic.Controllers
             }
 
             var cochera = await _context.Cocheras
-                .Include(c => c.Vehiculo)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (cochera == null)
             {
@@ -48,7 +48,6 @@ namespace MVCBasic.Controllers
         // GET: Cochera/Create
         public IActionResult Create()
         {
-            ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Patente");
             return View();
         }
 
@@ -65,7 +64,6 @@ namespace MVCBasic.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Patente", cochera.VehiculoId);
             return View(cochera);
         }
 
@@ -82,7 +80,6 @@ namespace MVCBasic.Controllers
             {
                 return NotFound();
             }
-            ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Patente", cochera.VehiculoId);
             return View(cochera);
         }
 
@@ -118,7 +115,6 @@ namespace MVCBasic.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["VehiculoId"] = new SelectList(_context.Vehiculos, "Id", "Patente", cochera.VehiculoId);
             return View(cochera);
         }
 
@@ -131,7 +127,6 @@ namespace MVCBasic.Controllers
             }
 
             var cochera = await _context.Cocheras
-                .Include(c => c.Vehiculo)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (cochera == null)
             {

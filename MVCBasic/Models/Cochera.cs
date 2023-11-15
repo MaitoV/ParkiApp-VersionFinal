@@ -21,7 +21,6 @@ namespace MVCBasic.Models
 
         // Relación uno a uno con Vehiculo
         public int? VehiculoId { get; set; }
-        public Vehiculo Vehiculo { get; set; }
 
     }
 }
