@@ -20,7 +20,7 @@
             <div class="form-group">
                 <label asp-for="Piso" class="control-label"></label>
                 <!--<select asp-for="Piso" class="form-control"></select>-->
-                <input asp-for="VehiculoId" class="form-control" />
+                <input asp-for="Piso" class="form-control" />
                 <span asp-validation-for="Piso" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -37,7 +37,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="VehiculoId" class="control-label"></label>
-                <input asp-for="VehiculoId" class="form-control" />
+                @Html.DropDownList("patente", new SelectList(ViewBag.Patentes))
                 <span asp-validation-for="VehiculoId" class="text-danger"></span>
             </div>
             <div class="form-group">

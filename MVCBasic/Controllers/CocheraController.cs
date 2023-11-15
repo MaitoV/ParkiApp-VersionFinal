@@ -48,6 +48,9 @@ namespace MVCBasic.Controllers
         // GET: Cochera/Create
         public IActionResult Create()
         {
+            var patentes = _context.Vehiculos.Select(v => v.Patente).ToList();
+            ViewBag.Patentes = patentes;
+
             return View();
         }
 
