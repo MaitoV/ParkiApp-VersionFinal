@@ -37,6 +37,18 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="@Url.Action("Login", "Cliente")">Ingreso Usuario</a>
                         </li>
+                        <li class="nav-item">
+                            <form action="/Cliente/Buscar" method="get">
+                                <label for="persona">Buscar Persona por Nombre o Email:</label>
+                                <input type="text" id="persona" name="busquedaPersona" placeholder="Ingrese nombre o email">
+                                <input type="submit" value="Buscar">
+                            </form>
+                            <form action="/Vehiculo/Buscar" method="get">
+                                <label for="vehiculo">Buscar Vehículo por Patente:</label>
+                                <input type="text" id="vehiculo" name="busquedaVehiculo" placeholder="Ingrese patente">
+                                <input type="submit" value="Buscar">
+                            </form>
+                        </li>
                     </ul>
                 </div>
             </div>

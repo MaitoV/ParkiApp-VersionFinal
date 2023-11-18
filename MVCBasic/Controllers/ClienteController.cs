@@ -4,14 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using MVCBasic.Models;
 using MVCBasico.Context;
+using Newtonsoft.Json;
 
 namespace MVCBasic.Controllers
 {
     public class ClienteController : Controller
     {
+        private const string SessionID = "_UserID";
+        private const string SessionName = "_UserName";
         private readonly EscuelaDatabaseContext _context;
 
         public ClienteController(EscuelaDatabaseContext context)
@@ -45,21 +49,19 @@ namespace MVCBasic.Controllers
             return View(cliente);
         }
 
-        // GET: Cliente/Create
+        // GET: Cliente/ Registrar
         public IActionResult Register()
         {
             return View();
         }
 
-        // POST: Cliente/Create
+        // POST: Cliente/Registrar
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(/*[Bind("Email,Id,Nombre,Apellido,password,Telefono")]*/ Cliente cliente)
+        public async Task<IActionResult> Register([Bind("Email,Id,Nombre,Apellido,password,Telefono")] Cliente cliente)
         {
-            bool registrado;
-            string error;
 
             if(verificarExistenciaUsuario(cliente.Email))
             {
@@ -168,7 +170,6 @@ namespace MVCBasic.Controllers
         {
             return View();
         }
-        [HttpPost]
         // POST: LOGIN DE USUARIO
         [HttpPost]
         public IActionResult Login(Cliente model)
@@ -177,6 +178,10 @@ namespace MVCBasic.Controllers
 
             if (usuario != null && model.password == usuario.password)
             {
+                HttpContext.Session.SetString(SessionName, "Jarvik");
+                HttpContext.Session.SetInt32(SessionID, 24);
+                /*string usuarioJson = JsonConvert.SerializeObject(model);
+                HttpContext.Session.SetString("usuario", usuarioJson);*/
                 return RedirectToAction(nameof(Dashboard));
             }
 
@@ -187,7 +192,36 @@ namespace MVCBasic.Controllers
         // GET: DASHBOARD USUARIO
         public IActionResult Dashboard()
         {
+            ViewBag.Name = HttpContext.Session.GetString(SessionName);
             return View();
+            /*if (!string.IsNullOrEmpty(usuarioJson))
+            {
+                var model = JsonConvert.DeserializeObject<Cliente>(usuarioJson);
+
+                string nombreUsuario = model.Nombre;
+
+                ViewBag.NombreUsuario = nombreUsuario;
+
+                return View(model);
+            }
+            return RedirectToAction("Login");*/
+        }
+        // GET: BUSQUEDA
+        public async Task<IActionResult> Busqueda(string busqueda) {
+            if (!string.IsNullOrEmpty(busqueda)) {
+                var clienteEncontrado = _context.Clientes.FirstOrDefault(c =>
+                c.Nombre.Contains(busqueda) || c.Email == busqueda); 
+                /*return _context.Clientes != null ? 
+                             View(await _context.Clientes.ToListAsync()) :
+                             Problem("Entity set 'EscuelaDatabaseContext.Clientes'  is null.");*/
+                if(clienteEncontrado != null) {
+                    return View(clienteEncontrado);
+                } else
+                {
+                    return View();
+                }
+            }
+            return RedirectToAction("Dashboard");
         }
 
 

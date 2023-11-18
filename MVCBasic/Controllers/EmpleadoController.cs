@@ -154,6 +154,12 @@ namespace MVCBasic.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        // GET: CARGA DE COCHERAS
+        public IActionResult Carga()
+        {
+            return View();
+        }
+
 
         private bool EmpleadoExists(int id)
         {

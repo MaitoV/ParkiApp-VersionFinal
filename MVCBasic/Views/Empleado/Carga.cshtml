@@ -1,0 +1,22 @@
+﻿<h1>Carga de Cocheras</h1>
+<br />
+
+<form action="ProcesarFormulario" method="post">
+    @foreach(Piso piso in Enum.GetValues(typeof(Piso)))
+    {
+        <h2>@($"{piso}")</h2>
+                @foreach (TipoVehiculo tipoVehiculo in Enum.GetValues(typeof(TipoVehiculo)))
+                {
+                    foreach (TipoCochera tipoCochera in Enum.GetValues(typeof(TipoCochera)))
+                    {
+                        <label for="@($"{tipoVehiculo}-{tipoCochera}")" class="control-label">
+                            Espacios disponibles para @tipoVehiculo en cochera @tipoCochera:
+                        </label>
+                    <input type="number" id="@($"{tipoVehiculo}-{tipoCochera}")" name="@($"{tipoVehiculo}-{tipoCochera}")" class="form-control">
+                    }
+                }
+        <hr />
+    }
+
+    <button type="submit">Enviar</button>
+</form>
