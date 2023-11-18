@@ -46,7 +46,7 @@ namespace MVCBasic.Controllers
         }
 
         // GET: Cliente/Create
-        public IActionResult Create()
+        public IActionResult Register()
         {
             return View();
         }
@@ -56,8 +56,17 @@ namespace MVCBasic.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Email,Id,Nombre,Apellido,password,Telefono")] Cliente cliente)
+        public async Task<IActionResult> Register(/*[Bind("Email,Id,Nombre,Apellido,password,Telefono")]*/ Cliente cliente)
         {
+            bool registrado;
+            string error;
+
+            if(verificarExistenciaUsuario(cliente.Email))
+            {
+                ViewData["Mensaje"] = "El usuario ya existe, por favor seleccione un nuevo email para su registro";
+                return View(cliente);
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(cliente);
@@ -153,6 +162,40 @@ namespace MVCBasic.Controllers
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+        // GET: LOGIN DE USUARIO
+        public IActionResult Login()
+        {
+            return View();
+        }
+        [HttpPost]
+        // POST: LOGIN DE USUARIO
+        [HttpPost]
+        public IActionResult Login(Cliente model)
+        {
+            var usuario = _context.Clientes.FirstOrDefault(u => u.Email == model.Email);
+
+            if (usuario != null && model.password == usuario.password)
+            {
+                return RedirectToAction(nameof(Dashboard));
+            }
+
+            ViewData["LoginError"] = "Credenciales inválidas, intente nuevamente"; 
+
+            return View(model);
+        }
+        // GET: DASHBOARD USUARIO
+        public IActionResult Dashboard()
+        {
+            return View();
+        }
+
+
+
+        private bool verificarExistenciaUsuario(String email)
+        {
+            var usuario = _context.Clientes.FirstOrDefault(u => u.Email == email);
+            return usuario != null;
         }
 
         private bool ClienteExists(int id)

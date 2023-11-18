@@ -1,0 +1,19 @@
+﻿@model MVCBasic.Models.Cliente
+
+<form asp-action="Login" asp-controller="Cliente" method="post">
+    <div class="form-group">
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="password" class="control-label"></label>
+        <input asp-for="password" class="form-control" />
+        @if (!string.IsNullOrEmpty(ViewData["LoginError"] as string))
+        {
+            <span class="text-danger">@ViewData["LoginError"]</span>
+        }
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Enviar" class="btn btn-primary" />
+    </div>
+</form>
