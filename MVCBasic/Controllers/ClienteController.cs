@@ -10,92 +10,87 @@ using MVCBasico.Context;
 
 namespace MVCBasic.Controllers
 {
-    public class CocheraController : Controller
+    public class ClienteController : Controller
     {
         private readonly EscuelaDatabaseContext _context;
 
-        public CocheraController(EscuelaDatabaseContext context)
+        public ClienteController(EscuelaDatabaseContext context)
         {
             _context = context;
         }
 
-        // GET: Cochera
+        // GET: Cliente
         public async Task<IActionResult> Index()
         {
-              return _context.Cocheras != null ? 
-                          View(await _context.Cocheras.ToListAsync()) :
-                          Problem("Entity set 'EscuelaDatabaseContext.Cocheras'  is null.");
+              return _context.Clientes != null ? 
+                          View(await _context.Clientes.ToListAsync()) :
+                          Problem("Entity set 'EscuelaDatabaseContext.Clientes'  is null.");
         }
 
-        // GET: Cochera/Details/5
+        // GET: Cliente/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Cocheras == null)
+            if (id == null || _context.Clientes == null)
             {
                 return NotFound();
             }
 
-            var cochera = await _context.Cocheras
+            var cliente = await _context.Clientes
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (cochera == null)
+            if (cliente == null)
             {
                 return NotFound();
             }
 
-            return View(cochera);
+            return View(cliente);
         }
 
-        // GET: Cochera/Create
+        // GET: Cliente/Create
         public IActionResult Create()
         {
-            var vehiculos = _context.Vehiculos.Select(v => new { v.Id, v.Patente}).ToList();
-            var listaVehiculos = new SelectList(vehiculos, "Id", "Patente");
-
-            ViewBag.ListaVehiculos = listaVehiculos;
-
             return View();
         }
 
-        // POST: Cochera/Create
+        // POST: Cliente/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,NumeroCochera,Piso,FechaIngreso,TipoCochera,VehiculoId")] Cochera cochera)
+        public async Task<IActionResult> Create([Bind("Email,Id,Nombre,Apellido,password,Telefono")] Cliente cliente)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(cochera);
+                _context.Add(cliente);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(cochera);
+            return View(cliente);
         }
 
-        // GET: Cochera/Edit/5
+        // GET: Cliente/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Cocheras == null)
+            if (id == null || _context.Clientes == null)
             {
                 return NotFound();
             }
 
-            var cochera = await _context.Cocheras.FindAsync(id);
-            if (cochera == null)
+            var cliente = await _context.Clientes.FindAsync(id);
+            if (cliente == null)
             {
                 return NotFound();
             }
-            return View(cochera);
+            return View(cliente);
         }
 
-        // POST: Cochera/Edit/5
+        // POST: Cliente/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NumeroCochera,Piso,FechaIngreso,TipoCochera,VehiculoId")] Cochera cochera)
+        public async Task<IActionResult> Edit(int id, [Bind("Email,Id,Nombre,Apellido,password,Telefono")] Cliente cliente)
         {
-            if (id != cochera.Id)
+            if (id != cliente.Id)
             {
                 return NotFound();
             }
@@ -104,12 +99,12 @@ namespace MVCBasic.Controllers
             {
                 try
                 {
-                    _context.Update(cochera);
+                    _context.Update(cliente);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CocheraExists(cochera.Id))
+                    if (!ClienteExists(cliente.Id))
                     {
                         return NotFound();
                     }
@@ -120,49 +115,49 @@ namespace MVCBasic.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(cochera);
+            return View(cliente);
         }
 
-        // GET: Cochera/Delete/5
+        // GET: Cliente/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Cocheras == null)
+            if (id == null || _context.Clientes == null)
             {
                 return NotFound();
             }
 
-            var cochera = await _context.Cocheras
+            var cliente = await _context.Clientes
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (cochera == null)
+            if (cliente == null)
             {
                 return NotFound();
             }
 
-            return View(cochera);
+            return View(cliente);
         }
 
-        // POST: Cochera/Delete/5
+        // POST: Cliente/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Cocheras == null)
+            if (_context.Clientes == null)
             {
-                return Problem("Entity set 'EscuelaDatabaseContext.Cocheras'  is null.");
+                return Problem("Entity set 'EscuelaDatabaseContext.Clientes'  is null.");
             }
-            var cochera = await _context.Cocheras.FindAsync(id);
-            if (cochera != null)
+            var cliente = await _context.Clientes.FindAsync(id);
+            if (cliente != null)
             {
-                _context.Cocheras.Remove(cochera);
+                _context.Clientes.Remove(cliente);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CocheraExists(int id)
+        private bool ClienteExists(int id)
         {
-          return (_context.Cocheras?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Clientes?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

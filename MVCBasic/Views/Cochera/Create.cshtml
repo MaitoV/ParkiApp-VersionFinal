@@ -19,8 +19,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="Piso" class="control-label"></label>
-                <!--<select asp-for="Piso" class="form-control"></select>-->
-                <input asp-for="Piso" class="form-control" />
+                <select asp-for="Piso" class="form-control" asp-items="Html.GetEnumSelectList<Piso>()">
+                    <option selected="selected" value="">Seleccionar un piso</option>
+                </select>
                 <span asp-validation-for="Piso" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -37,7 +38,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="VehiculoId" class="control-label"></label>
-                @Html.DropDownList("patente", new SelectList(ViewBag.Patentes))
+                @Html.DropDownList("VehiculoId", ViewBag.ListaVehiculos as SelectList, "Selecciona un vehículo")
                 <span asp-validation-for="VehiculoId" class="text-danger"></span>
             </div>
             <div class="form-group">

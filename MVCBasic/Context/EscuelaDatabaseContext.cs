@@ -17,6 +17,8 @@ namespace MVCBasico.Context
         public DbSet<Estudiante> Estudiantes { get; set; }
         public DbSet<Vehiculo> Vehiculos { get; set; }
         public DbSet<Cochera> Cocheras { get; set; }
+        public DbSet<Cliente> Clientes { get; set; }
+        public DbSet<Empleado> Empleados { get; set; }
     }
 }
 

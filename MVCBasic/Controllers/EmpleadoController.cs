@@ -10,92 +10,87 @@ using MVCBasico.Context;
 
 namespace MVCBasic.Controllers
 {
-    public class CocheraController : Controller
+    public class EmpleadoController : Controller
     {
         private readonly EscuelaDatabaseContext _context;
 
-        public CocheraController(EscuelaDatabaseContext context)
+        public EmpleadoController(EscuelaDatabaseContext context)
         {
             _context = context;
         }
 
-        // GET: Cochera
+        // GET: Empleado
         public async Task<IActionResult> Index()
         {
-              return _context.Cocheras != null ? 
-                          View(await _context.Cocheras.ToListAsync()) :
-                          Problem("Entity set 'EscuelaDatabaseContext.Cocheras'  is null.");
+              return _context.Empleados != null ? 
+                          View(await _context.Empleados.ToListAsync()) :
+                          Problem("Entity set 'EscuelaDatabaseContext.Empleados'  is null.");
         }
 
-        // GET: Cochera/Details/5
+        // GET: Empleado/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Cocheras == null)
+            if (id == null || _context.Empleados == null)
             {
                 return NotFound();
             }
 
-            var cochera = await _context.Cocheras
+            var empleado = await _context.Empleados
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (cochera == null)
+            if (empleado == null)
             {
                 return NotFound();
             }
 
-            return View(cochera);
+            return View(empleado);
         }
 
-        // GET: Cochera/Create
+        // GET: Empleado/Create
         public IActionResult Create()
         {
-            var vehiculos = _context.Vehiculos.Select(v => new { v.Id, v.Patente}).ToList();
-            var listaVehiculos = new SelectList(vehiculos, "Id", "Patente");
-
-            ViewBag.ListaVehiculos = listaVehiculos;
-
             return View();
         }
 
-        // POST: Cochera/Create
+        // POST: Empleado/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,NumeroCochera,Piso,FechaIngreso,TipoCochera,VehiculoId")] Cochera cochera)
+        public async Task<IActionResult> Create([Bind("NumeroLegajo,Turno,Id,Nombre,Apellido,password,Telefono")] Empleado empleado)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(cochera);
+                _context.Add(empleado);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(cochera);
+            return View(empleado);
         }
 
-        // GET: Cochera/Edit/5
+        // GET: Empleado/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Cocheras == null)
+            if (id == null || _context.Empleados == null)
             {
                 return NotFound();
             }
 
-            var cochera = await _context.Cocheras.FindAsync(id);
-            if (cochera == null)
+            var empleado = await _context.Empleados.FindAsync(id);
+            if (empleado == null)
             {
                 return NotFound();
             }
-            return View(cochera);
+            return View(empleado);
         }
 
-        // POST: Cochera/Edit/5
+        // POST: Empleado/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NumeroCochera,Piso,FechaIngreso,TipoCochera,VehiculoId")] Cochera cochera)
+        public async Task<IActionResult> Edit(int id, [Bind("NumeroLegajo,Turno,Id,Nombre,Apellido,password,Telefono")] Empleado empleado)
         {
-            if (id != cochera.Id)
+            if (id != empleado.Id)
             {
                 return NotFound();
             }
@@ -104,12 +99,12 @@ namespace MVCBasic.Controllers
             {
                 try
                 {
-                    _context.Update(cochera);
+                    _context.Update(empleado);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CocheraExists(cochera.Id))
+                    if (!EmpleadoExists(empleado.Id))
                     {
                         return NotFound();
                     }
@@ -120,49 +115,49 @@ namespace MVCBasic.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(cochera);
+            return View(empleado);
         }
 
-        // GET: Cochera/Delete/5
+        // GET: Empleado/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Cocheras == null)
+            if (id == null || _context.Empleados == null)
             {
                 return NotFound();
             }
 
-            var cochera = await _context.Cocheras
+            var empleado = await _context.Empleados
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (cochera == null)
+            if (empleado == null)
             {
                 return NotFound();
             }
 
-            return View(cochera);
+            return View(empleado);
         }
 
-        // POST: Cochera/Delete/5
+        // POST: Empleado/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Cocheras == null)
+            if (_context.Empleados == null)
             {
-                return Problem("Entity set 'EscuelaDatabaseContext.Cocheras'  is null.");
+                return Problem("Entity set 'EscuelaDatabaseContext.Empleados'  is null.");
             }
-            var cochera = await _context.Cocheras.FindAsync(id);
-            if (cochera != null)
+            var empleado = await _context.Empleados.FindAsync(id);
+            if (empleado != null)
             {
-                _context.Cocheras.Remove(cochera);
+                _context.Empleados.Remove(empleado);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CocheraExists(int id)
+        private bool EmpleadoExists(int id)
         {
-          return (_context.Cocheras?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Empleados?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
