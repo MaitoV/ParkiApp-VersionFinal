@@ -49,7 +49,7 @@ namespace MVCBasic.Controllers
             return View(cliente);
         }
 
-        // GET: Cliente/ Registrar
+        // GET: REGISTRAR CLIENTE
         public IActionResult Register()
         {
             return View();

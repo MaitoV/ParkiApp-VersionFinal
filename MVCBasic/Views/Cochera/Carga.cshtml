@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Carga de Cocheras";
+}
+<h1>Carga de Cocheras</h1>
+<br />
+
+<form action="/Cochera/CrearCocheras" method="post">
+    @foreach(Piso piso in Enum.GetValues(typeof(Piso)))
+    {
+        <h2>Piso - @($"{piso}")</h2>
+                @foreach (TipoVehiculo tipoVehiculo in Enum.GetValues(typeof(TipoVehiculo)))
+                {
+                <h4> @($"{tipoVehiculo}")</h4>
+                    foreach (TipoCochera tipoCochera in Enum.GetValues(typeof(TipoCochera)))
+                    {
+                        <label for="@($"{piso}-{tipoVehiculo}-{tipoCochera}")" class="control-label">
+                            Cocheras @tipoCochera disponibles para @tipoVehiculo:
+                        </label>
+                    <input required id="@($"{piso}-{tipoVehiculo}-{tipoCochera}")" name="@($"{piso}-{tipoVehiculo}-{tipoCochera}")" class="form-control">
+                    }
+                }
+        <hr />
+    }
+
+    <input type="submit" value="Enviar" class="btn btn-primary" />
+</form>

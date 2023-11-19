@@ -12,6 +12,8 @@ namespace MVCBasic.Controllers
 {
     public class EmpleadoController : Controller
     {
+        private const string SessionID = "_UserID";
+        private const string SessionName = "_UserName";
         private readonly EscuelaDatabaseContext _context;
 
         public EmpleadoController(EscuelaDatabaseContext context)
@@ -154,9 +156,50 @@ namespace MVCBasic.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        // GET: CARGA DE COCHERAS
-        public IActionResult Carga()
+        public IActionResult Login()
         {
+            return View();
+        }
+        // POST: LOGIN DE USUARIO
+        [HttpPost]
+        public IActionResult Login(Empleado model)
+        {
+            var usuario = _context.Empleados.FirstOrDefault(u => u.NumeroLegajo == model.NumeroLegajo);
+
+            if (usuario != null && model.password == usuario.password)
+            {
+                //HttpContext.Session.SetString(SessionName, "Jarvik");
+                //HttpContext.Session.SetInt32(SessionID, 24);
+                /*string usuarioJson = JsonConvert.SerializeObject(model);
+                HttpContext.Session.SetString("usuario", usuarioJson);*/
+                return RedirectToAction(nameof(Dashboard));
+            }
+
+            ViewData["LoginError"] = "Credenciales inválidas, intente nuevamente";
+
+            return View(model);
+        }
+        // GET: DASHBOARD EMPLEADO
+        public IActionResult Dashboard()
+        {
+            var cantidadCocheras = _context.Cocheras.Count();
+            if(cantidadCocheras != 0)
+            {
+                var cocherasPorTipo = _context.Cocheras.GroupBy(c => new { c.TipoVehiculo, c.TipoCochera }).Select(g => new
+                {
+                    TipoVehiculo = g.Key.TipoVehiculo,
+                    TipoCochera = g.Key.TipoCochera,
+                    Cantidad = g.Count()
+                }).ToList();
+                var mensaje = "Hay ";
+                foreach (var grupo in cocherasPorTipo)
+                {
+                    mensaje += $"{grupo.Cantidad} cocheras {grupo.TipoVehiculo.ToString().ToLower()} para {grupo.TipoCochera.ToString().ToLower()}, ";
+                }
+
+                ViewBag.Mensaje = mensaje.TrimEnd(',', ' ') + ".";
+            }
+            ViewBag.TotalCocheras = cantidadCocheras;
             return View();
         }
 

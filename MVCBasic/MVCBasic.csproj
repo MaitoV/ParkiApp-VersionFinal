@@ -9,6 +9,7 @@
   <ItemGroup>
     <Compile Remove="Views\Cliente\Busqueda.cshtml.cs" />
     <Compile Remove="Views\Empleado\Carga.cshtml.cs" />
+    <Compile Remove="Views\Empleado\Dashboard.cshtml.cs" />
   </ItemGroup>
 
   <ItemGroup>

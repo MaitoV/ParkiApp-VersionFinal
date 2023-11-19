@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -159,8 +160,50 @@ namespace MVCBasic.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        // GET: FORMULARIO CARGA DE COCHERAS
+        public IActionResult Carga()
+        {
+            return View();
+        }
+        // POST - CREAR COCHERAS
+        [HttpPost]
+        public IActionResult CrearCocheras(IFormCollection form)
+        {
+            Random rnd = new Random();
 
-        private bool CocheraExists(int id)
+            foreach (Piso piso in Enum.GetValues(typeof(Piso)))
+            {
+                foreach (TipoVehiculo tipoVehiculo in Enum.GetValues(typeof(TipoVehiculo)))
+                {
+                    foreach (TipoCochera tipoCochera in Enum.GetValues(typeof(TipoCochera)))
+                    {
+
+                        var inputName = $"{piso}-{tipoVehiculo}-{tipoCochera}";
+                        if (form.ContainsKey(inputName) && int.TryParse(form[inputName], out int cantidadEspacios))
+                        {
+                            for (int i = 0; i < cantidadEspacios; i++)
+                            {
+                                
+                                 var nuevaCochera = new Cochera
+                                {
+                                    NumeroCochera = rnd.Next(1, 101),
+                                    Piso = piso,
+                                    TipoVehiculo = tipoVehiculo,
+                                    TipoCochera = tipoCochera,
+                                };
+
+                                _context.Cocheras.Add(nuevaCochera);
+                            }
+                    }
+                    }
+                }
+            }
+            _context.SaveChanges();
+
+            return RedirectToAction("Dashboard", "Empleado");
+        }
+
+         private bool CocheraExists(int id)
         {
           return (_context.Cocheras?.Any(e => e.Id == id)).GetValueOrDefault();
         }

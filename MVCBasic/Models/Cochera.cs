@@ -18,7 +18,9 @@ namespace MVCBasic.Models
         [Required]
         [EnumDataType(typeof(TipoCochera))]
         public TipoCochera TipoCochera { get; set; }
-
+        [Required]
+        [EnumDataType(typeof(TipoCochera))]
+        public TipoVehiculo TipoVehiculo { get; set; }
         // Relación uno a uno con Vehiculo
         public int? VehiculoId { get; set; }
 

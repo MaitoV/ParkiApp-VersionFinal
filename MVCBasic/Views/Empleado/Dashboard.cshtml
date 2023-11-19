@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Panel Empleado";
+}
+<h1>Dashboard Empleado</h1>
+
+@if ((int)ViewBag.TotalCocheras == 0)
+{
+    <p>Aún no hay ninguna cochera cargada. Debes cargar las cocheras disponibles</p>
+    <a class="btn btn-primary" asp-area="" asp-controller="Cochera" asp-action="Carga">Cargar Cocheras</a>
+} else
+{
+    <p>Hay @ViewBag.TotalCocheras cocheras totales</p>
+    <p>Hay @ViewBag.Mensaje cocheras totales</p>
+}
+<form action="/Cliente/Buscar" method="get">
+    <label for="persona">Buscar Persona por Nombre o Email:</label>
+    <input type="text" id="persona" name="busquedaPersona" placeholder="Ingrese nombre o email">
+    <input class="btn btn-primary" type="submit" value="Buscar">
+</form>
+<form action="/Vehiculo/Buscar" method="get">
+    <label for="vehiculo">Buscar Vehículo por Patente:</label>
+    <input type="text" id="vehiculo" name="busquedaVehiculo" placeholder="Ingrese patente">
+    <input class="btn btn-primary" type="submit" value="Buscar">
+</form>
+
