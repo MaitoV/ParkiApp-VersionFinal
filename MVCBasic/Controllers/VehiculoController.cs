@@ -19,13 +19,38 @@ namespace MVCBasic.Controllers
             _context = context;
         }
 
-        // GET: Vehiculo
-        public async Task<IActionResult> Index()
+        // GET: BUSQUEDA VEHICULOS
+        public async Task<IActionResult> Busqueda(String busquedaVehiculo)
         {
-              return _context.Vehiculos != null ? 
-                          View(await _context.Vehiculos.ToListAsync()) :
-                          Problem("Entity set 'EscuelaDatabaseContext.Vehiculos'  is null.");
+            var vehiculos = await _context.Vehiculos.Where(v => v.Patente.Contains(busquedaVehiculo)).ToListAsync();
+
+            return View(vehiculos);
         }
+        // GET: REGISTRAR VEHICULO
+        public IActionResult Create()
+        {
+            return View();
+        }
+        // POST: REGISTRAR VEHICULO
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Patente,Tipo")] Vehiculo vehiculo)
+        {
+            var vehiculoExistente = await _context.Vehiculos.FirstOrDefaultAsync(v => v.Patente == vehiculo.Patente);
+            if(vehiculoExistente != null)
+            {
+                ViewBag.ErrorMessage = "No se pudo crear. Ya existe un vehículo con esa patente";
+                return View();
+            } else if (ModelState.IsValid)
+            {
+                _context.Add(vehiculo);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(vehiculo);
+        }
+
+
 
         // GET: Vehiculo/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -45,27 +70,6 @@ namespace MVCBasic.Controllers
             return View(vehiculo);
         }
 
-        // GET: Vehiculo/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Vehiculo/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Patente,Tipo")] Vehiculo vehiculo)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(vehiculo);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(vehiculo);
-        }
 
         // GET: Vehiculo/Edit/5
         public async Task<IActionResult> Edit(int? id)

@@ -27,7 +27,6 @@ namespace MVCBasic.Controllers
         // GET: BUSQUEDA DE CLIENTES
         public async Task<IActionResult> Busqueda(String busquedaPersona)
         {
-            Debug.WriteLine($"EL STRING DE BUSQUEDA ES EL SIGUIENTE ->: {busquedaPersona}");
             var resultadoBusqueda = await _context.Clientes.Where(t =>
            t.Nombre.Contains(busquedaPersona) ||
            t.Apellido.Contains(busquedaPersona) ||
