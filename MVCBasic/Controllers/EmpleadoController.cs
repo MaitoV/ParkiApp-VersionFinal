@@ -194,7 +194,7 @@ namespace MVCBasic.Controllers
                 var mensaje = "Hay ";
                 foreach (var grupo in cocherasPorTipo)
                 {
-                    mensaje += $"{grupo.Cantidad} cocheras {grupo.TipoVehiculo.ToString().ToLower()} para {grupo.TipoCochera.ToString().ToLower()}, ";
+                    mensaje += $"{grupo.Cantidad} cocheras {grupo.TipoCochera.ToString().ToLower()} para {grupo.TipoVehiculo.ToString().ToLower()}, ";
                 }
 
                 ViewBag.Mensaje = mensaje.TrimEnd(',', ' ') + ".";

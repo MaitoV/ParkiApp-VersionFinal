@@ -10,9 +10,9 @@
 } else
 {
     <p>Hay @ViewBag.TotalCocheras cocheras totales</p>
-    <p>Hay @ViewBag.Mensaje cocheras totales</p>
+    <p> @ViewBag.Mensaje</p>
 }
-<form action="/Cliente/Buscar" method="get">
+<form action="/Cliente/Busqueda" method="get">
     <label for="persona">Buscar Persona por Nombre o Email:</label>
     <input type="text" id="persona" name="busquedaPersona" placeholder="Ingrese nombre o email">
     <input class="btn btn-primary" type="submit" value="Buscar">
