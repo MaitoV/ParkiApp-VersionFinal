@@ -1,62 +1,59 @@
 ﻿@{
     ViewData["Title"] = "Panel Empleado";
 }
-<h1>Dashboard Empleado</h1>
 
-@if ((int)ViewBag.TotalCocheras == 0)
-{
-    <p>Aún no hay ninguna cochera cargada. Debes cargar las cocheras disponibles</p>
-    <a class="btn btn-primary" asp-area="" asp-controller="Cochera" asp-action="Carga">Cargar Cocheras</a>
-} else
-{
-    <div>
-        <p>Hay @ViewBag.TotalCocheras cocheras totales</p>
-        <p> @ViewBag.Mensaje</p>
-    </div>
-
-    <form action="/Cliente/Busqueda" method="get">
-        <label for="persona">Buscar Persona por Nombre o Email:</label>
-        <input type="text" id="persona" name="busquedaPersona" placeholder="Ingrese nombre o email">
-        <input class="btn btn-primary" type="submit" value="Buscar">
-    </form>
-    <form action="/Vehiculo/Busqueda" method="get">
-        <label for="vehiculo">Buscar Vehículo por Patente:</label>
-        <input type="text" id="vehiculo" name="busquedaVehiculo" placeholder="Ingrese patente">
-        <input class="btn btn-primary" type="submit" value="Buscar">
-    </form>
-    <form action="/Cochera/Disponibles" method="get">
-        <h4>Buscar Cocheras disponibles</h4>
-        <fieldset>
-            <legend>Tipo de Auto:</legend>
-            @foreach (var tipoVehiculo in Enum.GetValues(typeof(TipoVehiculo)))
-            {
-                <div>
-                    <input type="radio" id="@($"tipoVehiculo-{tipoVehiculo}")" name="tipoVehiculo" value="@tipoVehiculo">
-                    <label for="@($"tipoVehiculo-{tipoVehiculo}")">@tipoVehiculo</label>
-                </div>
-            }
-        </fieldset>
-        <fieldset>
-            <legend>Tipo de cochera:</legend>
-            @foreach (var tipoCochera in Enum.GetValues(typeof(TipoCochera)))
-            {
-                <input type="radio" id="@($"tipoCochera-{tipoCochera}")" name="tipoCochera" value="@tipoCochera">
-                <label for="@($"tipoCochera-{tipoCochera}")">@tipoCochera</label>
-                <br>
-            }
-        </fieldset>
-        <input class="btn btn-primary" type="submit" value="Buscar">
-    </form>
-/* DESDE ACA */
 <div class="body-dashboard">
+    <h1 class="dashboard-title">Dashboard Empleado</h1>
+        @if ((int)ViewBag.TotalCocheras == 0)
+        {
+            <p>Aún no hay ninguna cochera cargada. Debes cargar las cocheras disponibles</p>
+            <a class="btn btn-primary" asp-area="" asp-controller="Cochera" asp-action="Carga">Cargar Cocheras</a>
+        }
+        else {
     <div class="search-section">
         <div class="search-box">
-                <input class="search__input" type="text" placeholder="Search">
+                <p class="search__title">Buscar Cliente</p>
+                <form class="search-form" action="/Cliente/Busqueda" method="get">
+                    <input class="search__input" type="text" name="busquedaPersona" placeholder="Ingresar Nombre o Email">
+                    <input class="btn btn-primary" type="submit" value="Buscar">
+                </form>
         </div>
-            <div class="search-box">
-                <input class="search__input" type="text" placeholder="Search">
-            </div>
+        <div class="search-box">
+                <p class="search__title">Buscar Vehiculo</p>
+                <form class="search-form" action="/Vehiculo/Busqueda" method="get">
+                    <input class="search__input" type="text" id="vehiculo" name="busquedaVehiculo" placeholder="Ingrese patente">
+                    <input class="btn btn-primary" type="submit" value="Buscar">
+                </form>
+       </div>
     </div>
+
+        <div>
+            <p class="search__title">Buscar Cocheras Disponibles</p>
+            <form class="search-cochera" action="/Cochera/Disponibles" method="get">
+                <fieldset>
+                    <p>Tipo Vehiculo</p>
+                    <div class="radio-group">
+                        @foreach (var tipoVehiculo in Enum.GetValues(typeof(TipoVehiculo)))
+                        {
+                            <input type="radio" id="@($"tipoVehiculo-{tipoVehiculo}")" name="tipoVehiculo" value="@tipoVehiculo">
+                            <label for="@($"tipoVehiculo-{tipoVehiculo}")">@tipoVehiculo</label>
+                        }
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <p>Tipo Cochera</p>
+                    <div class="radio-group">
+                        @foreach (var tipoCochera in Enum.GetValues(typeof(TipoCochera)))
+                        {
+                            <input type="radio" id="@($"tipoCochera-{tipoCochera}")" name="tipoCochera" value="@tipoCochera">
+                            <label for="@($"tipoCochera-{tipoCochera}")">@tipoCochera</label>
+                        }
+                    </div>
+                </fieldset>
+                <input class="btn btn-primary" type="submit" value="Buscar">
+            </form>
+        </div>
+
     <div class="info-group">
             <div class="card">
                 <svg class="card-icon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
@@ -111,7 +108,6 @@
                 <h2 class="card-title">@ViewBag.AutoLibres <br /><span class="card-subtitle">LIBRES AUTOS</span></h2>
             </div>
         </div>
+        }
 </div>
 
-
-}

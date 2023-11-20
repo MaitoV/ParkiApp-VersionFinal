@@ -175,9 +175,14 @@ svg {
             color: #2d6eac;
         }
 /*=================== DASHBOARD EMPLEADO ======================= */
+.dashboard-title {
+    color: #1f4d79;
+    margin-bottom: 70px;
+}
 .body-dashboard {
     width: 100vw;
-    padding: 40px 80px 40px 80px;
+    min-height: 100vh;
+    padding: 10px 40px 40px 40px;
     background-color: #ede8f0;
 }
 .info-group {
@@ -207,9 +212,27 @@ svg {
     color: #9c9c9c;
 }
 /* EMPLEADO SEARCH BOXES*/
+.search-section {
+    display: flex;
+    justify-content: space-evenly;
+    column-gap: 25px;
+    flex-wrap: wrap;
+}
+.search-form {
+    display: flex;
+    align-items: start;
+    column-gap: 10px;
+}
 .search-box {
-    max-width: 500px;
-    margin-bottom: 80px;
+    min-width: 390px;
+    max-width: 550px;
+    margin-bottom: 20px;
+}
+.search__title {
+    font-size: 22px;
+    font-weight: 900;
+    text-align: center;
+    color: #2d6eac;
 }
 .search__input {
     width: 100%;
@@ -247,3 +270,51 @@ svg {
         border-radius: 0;
         background-position: 100% center;
     }
+/* BUSQUEDA DE COCHERA */
+.search-cochera {
+    width: max-content;
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    flex-wrap: wrap;
+    margin: 15px auto 20px auto;
+    background-color: #fff;
+    border: 1px solid #1f4d79;
+    border-radius: 20px;
+    padding: 5px 10px;
+}
+    .search-cochera fieldset p {
+        text-transform: uppercase;
+        font-size: 18px;
+        text-align: center;
+        color: rgb(87, 87, 86);
+    }
+input[type=radio] {
+    position: absolute;
+    visibility: hidden;
+    display: none;
+}
+
+label {
+    color: #000;
+    display: inline-block;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 5px 20px;
+}
+input[type=radio]:checked + label {
+    color: #FFF;
+    background: #1f4d79;
+}
+
+label + input[type=radio] + label {
+    border-left: solid 2px #1f4d79;
+}
+
+.radio-group {
+    border: solid 3px #2d6eac;
+    display: inline-block;
+    margin: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
