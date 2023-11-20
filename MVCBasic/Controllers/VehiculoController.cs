@@ -80,7 +80,7 @@ namespace MVCBasic.Controllers
             {
                 _context.Add(vehiculo);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Dashboard", "Empleado");
             }
             return View(vehiculo);
         }
@@ -152,7 +152,7 @@ namespace MVCBasic.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Dashboard", "Empleado");
             }
             return View(vehiculo);
         }
