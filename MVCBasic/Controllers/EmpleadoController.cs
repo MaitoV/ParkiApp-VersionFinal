@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MVCBasic.Migrations;
 using MVCBasic.Models;
 using MVCBasico.Context;
 
@@ -183,21 +184,22 @@ namespace MVCBasic.Controllers
         public IActionResult Dashboard()
         {
             var cantidadCocheras = _context.Cocheras.Count();
-            if(cantidadCocheras != 0)
+            if (cantidadCocheras != 0)
             {
-                var cocherasPorTipo = _context.Cocheras.GroupBy(c => new { c.TipoVehiculo, c.TipoCochera }).Select(g => new
-                {
-                    TipoVehiculo = g.Key.TipoVehiculo,
-                    TipoCochera = g.Key.TipoCochera,
-                    Cantidad = g.Count()
-                }).ToList();
-                var mensaje = "Hay ";
-                foreach (var grupo in cocherasPorTipo)
-                {
-                    mensaje += $"{grupo.Cantidad} cocheras {grupo.TipoCochera.ToString().ToLower()} para {grupo.TipoVehiculo.ToString().ToLower()}, ";
-                }
+                int fijasLibres = _context.Cocheras.Count(c => c.TipoCochera == TipoCochera.FIJA && c.VehiculoId == null);
+                int ocasionalLibres = _context.Cocheras.Count(c => c.TipoCochera == TipoCochera.OCASIONAL && c.VehiculoId == null);
+                int autoLibres = _context.Cocheras.Count(c => c.TipoVehiculo == TipoVehiculo.AUTO && c.VehiculoId == null);
+                int motoLibres = _context.Cocheras.Count(c => c.TipoVehiculo == TipoVehiculo.MOTO && c.VehiculoId == null);
+                int camionetaLibres = _context.Cocheras.Count(c => c.TipoVehiculo == TipoVehiculo.CAMIONETA && c.VehiculoId == null);
+                int cocherasConVehiculo = _context.Cocheras.Count(c => c.VehiculoId != null);
 
-                ViewBag.Mensaje = mensaje.TrimEnd(',', ' ') + ".";
+                ViewBag.AutoLibres = camionetaLibres;
+                ViewBag.MotoLibres = motoLibres;
+                ViewBag.CamionetaLibres = autoLibres;
+                ViewBag.FijasLibres = fijasLibres;
+                ViewBag.OcasionalLibres = ocasionalLibres;
+                ViewBag.CocherasLibres = cantidadCocheras - cocherasConVehiculo;
+                ViewBag.CocherasOcupadas = cocherasConVehiculo;
             }
             ViewBag.TotalCocheras = cantidadCocheras;
             return View();
