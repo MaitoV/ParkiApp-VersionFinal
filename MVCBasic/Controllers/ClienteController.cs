@@ -77,7 +77,7 @@ namespace MVCBasic.Controllers
             {
                 _context.Add(cliente);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Dashboard));
             }
             return View(cliente);
         }
@@ -196,19 +196,7 @@ namespace MVCBasic.Controllers
         // GET: DASHBOARD USUARIO
         public IActionResult Dashboard()
         {
-            ViewBag.Name = HttpContext.Session.GetString(SessionName);
             return View();
-            /*if (!string.IsNullOrEmpty(usuarioJson))
-            {
-                var model = JsonConvert.DeserializeObject<Cliente>(usuarioJson);
-
-                string nombreUsuario = model.Nombre;
-
-                ViewBag.NombreUsuario = nombreUsuario;
-
-                return View(model);
-            }
-            return RedirectToAction("Login");*/
         }
 
 

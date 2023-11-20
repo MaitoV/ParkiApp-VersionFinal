@@ -24,22 +24,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Vehiculo" asp-action="Index">Vehiculo</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Empleado" asp-action="Index">Empleado</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-dark" href="@Url.Action("Register", "Cliente")">Registrarse</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="@Url.Action("Login", "Cliente")">Ingreso Usuario</a>
+                            <a class="nav-link text-dark" href="@Url.Action("Login", "Cliente")">Inicio sesion Usuarios</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Cerrar sesión</a>
+                            <a class="nav-link text-dark" href="@Url.Action("Login", "Empleado")">Inicio sesion Empleados</a>
                         </li>
                     </ul>
                 </div>

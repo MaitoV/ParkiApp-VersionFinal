@@ -3,45 +3,64 @@
 @{
     ViewData["Title"] = "Usuario - Registrarse";
 }
-        <div class="body-login">
-            <div class="main-login">
-                <input type="checkbox" id="chk" aria-hidden="true">
+<div class="login-body">
+    <div class="login">
 
-                <div class="signup">
-                    <form asp-action="Register" asp-controller="Cliente" method="post">
-                        <label class="label-login" for="chk" aria-hidden="true">Registrarse</label>
-                        <input class="input-login" type="text" required asp-for="Email" class="form-control" placeholder="Email" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                        <input class="input-login" type="email" required asp-for="Nombre" class="form-control" placeholder="Nombre" />
-                        <span asp-validation-for="Nombre" class="text-danger"></span>
-                        <input class="input-login" type="text" required asp-for="Apellido" class="form-control" placeholder="Apellido" />
-                        <span asp-validation-for="Apellido" class="text-danger"></span>
-                        <input class="input-login" type="text" required asp-for="Telefono" class="form-control" placeholder="Password" />
-                        <span asp-validation-for="Telefono" class="text-danger"></span>
-                        <input class="input-login" type="text" required asp-for="password" class="form-control" placeholder="Telefono" />
-                        <span asp-validation-for="password" class="text-danger"></span>
-                        @if (!string.IsNullOrEmpty(ViewData["Mensaje"] as string))
-                        {
-                            <span class="text-danger">@ViewData["Mensaje"]</span>
-                        }
-                        <button class="button button-primary">Obtener cuenta</button>
-                    </form>
-                </div>
+        <header class="login__header">
+            <h2>
+                <svg class="icon">
+                    <use xlink:href="#icon-lock" />
+                </svg>OBTENE TU CUENTA
+            </h2>
+        </header>
 
-                <div class="login">
-                    <form asp-action="Login" asp-controller="Cliente" method="post">
-                        <label class="label-login" for="chk" aria-hidden="true">Iniciar sesión</label>
-                        <input class="input-login" required type="email" asp-for="Email" class="form-control" placeholder="Email" />
-                        <input class="input-login" required type="password" asp-for="password" class="form-control" placeholder="Password" />
-                        @if (!string.IsNullOrEmpty(ViewData["LoginError"] as string))
-                        {
-                            <span class="text-danger">@ViewData["LoginError"]</span>
-                        }
-                        <button class="button button-primary">Iniciar sesión</button>
-                    </form>
-                </div>
+        <form asp-action="Register" asp-controller="Cliente" class="login__form" method="POST">
+
+            <div>
+                <label asp-for="Email"></label>
+                <input required type="text" asp-for="Email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
             </div>
-        </div>
+            <div>
+                <label asp-for="Nombre"></label>
+                <input type="text" required asp-for="Nombre" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Apellido"></label>
+                <input type="text" required asp-for="Apellido"/>
+                <span asp-validation-for="Apellido" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Telefono"></label>
+                <input type="text" required asp-for="Telefono" />
+                <span asp-validation-for="Telefono" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="password"></label>
+                <input type="password" asp-for="password" />
+            </div>
+            @if (!string.IsNullOrEmpty(ViewData["Mensaje"] as string))
+            {
+                <span class="text-danger">@ViewData["Mensaje"]</span>
+            }
+            <div>
+                <input class="button" type="submit" value="Obtener cuenta">
+            </div>
+
+        </form>
+
+    </div>
+
+    <svg xmlns="http://www.w3.org/2000/svg" class="icons">
+
+        <symbol id="icon-lock" viewBox="0 0 448 512">
+            <path d="M400 224h-24v-72C376 68.2 307.8 0 224 0S72 68.2 72 152v72H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-72c0-39.7 32.3-72 72-72s72 32.3 72 72v72z" />
+        </symbol>
+
+    </svg>
+</div>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
