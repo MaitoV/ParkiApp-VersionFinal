@@ -318,3 +318,66 @@ label + input[type=radio] + label {
     border-radius: 10px;
     overflow: hidden;
 }
+/* ================== pagina de inicio ================= */
+.hero-wrapper {
+    height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+    background-color: #FFF;
+}
+.hero {
+    padding: 40px 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    height: 80vh;
+    background-color: #2d6eac;
+    border-bottom-left-radius: 160px;
+    border-bottom-right-radius: 160px;
+}
+.hero_image {
+    grid-column: 2;
+}
+.hero-action {
+    grid-column: 1;
+    grid-row: 1;
+}
+    .hero-action p {
+        color: #000;
+        font-size: 1.5rem;
+        margin-top: 2.3rem;
+    }
+.action {
+    border-radius: 10px;
+    padding: 15px 10px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #1f4d79;
+    background-color: #FFF;
+    margin: 20px auto 0 auto;
+    display: block;
+    text-align: center;
+    max-width: max-content;
+}
+    .action:hover {
+        transform: scale(1.1)
+    }
+.hero-title {
+    font-size: 3rem;
+    text-align: center;
+}
+.hero-subtitle {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 2rem;
+}
+.hero-title, .hero-subtitle {
+    color: #FFF;
+}
+/* MENU DE NAVEGACION */
+.navbar-nav {
+    justify-content: space-around;
+    align-items: center;
+}
+.nav-item {
+    color: #2d6eac !important;
+}
