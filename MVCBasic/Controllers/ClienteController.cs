@@ -128,7 +128,7 @@ namespace MVCBasic.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Dashboard", "Empleado");
             }
             return View(cliente);
         }
@@ -167,7 +167,7 @@ namespace MVCBasic.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Dashboard", "Empleado");
         }
         // GET: LOGIN DE USUARIO
         public IActionResult Login()

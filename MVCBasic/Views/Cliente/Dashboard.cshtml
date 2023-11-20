@@ -1,5 +1,5 @@
 ﻿@model MVCBasic.Models.Cliente
-<h1>Bienvenido!,  @ViewBag.Name!</h1>
+<h1>Bienvenido!</h1>
 
 @if (ViewBag.Vehiculos != null && ViewBag.Vehiculos.Count > 0)
 {
@@ -15,4 +15,4 @@ else
 {
     <p>Aún no has agregado ningún vehículo.</p>
 }
-<a class="nav-link text-dark" href="@Url.Action("Create", "Vehiculo")">Agregar Vehiculo</a>
+<a class="btn btn-primary" href="@Url.Action("Create", "Vehiculo")">Agregar Vehiculo</a>

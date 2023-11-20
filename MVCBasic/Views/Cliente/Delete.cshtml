@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Delete";
 }
-
+<div class="body-dashboard">
 <h1>Eliminar Cliente</h1>
 
 <h3>¿Estas seguro que quieres eliminar este registro?</h3>
@@ -46,6 +46,7 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Eliminar" class="btn btn-danger" /> |
-        <a asp-action="Index">Volver al listado</a>
+        <a asp-action="Dashboard" asp-controller="Empleado">Volver al listado</a>
     </form>
+</div>
 </div>
