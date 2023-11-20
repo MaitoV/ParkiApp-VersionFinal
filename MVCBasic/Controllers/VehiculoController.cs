@@ -191,7 +191,7 @@ namespace MVCBasic.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Dashboard", "Empleado");
         }
 
         private bool VehiculoExists(int id)
