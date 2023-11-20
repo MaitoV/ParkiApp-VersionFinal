@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Compile Remove="Views\Cliente\Busqueda.cshtml.cs" />
+    <Compile Remove="Views\Cochera\Disponible.cshtml.cs" />
     <Compile Remove="Views\Empleado\Carga.cshtml.cs" />
     <Compile Remove="Views\Empleado\Dashboard.cshtml.cs" />
     <Compile Remove="Views\Vehiculo\Busqueda.cshtml.cs" />
@@ -17,6 +18,7 @@
     <Content Remove="Views\Cliente\Index - Copia.cshtml" />
     <Content Remove="Views\Cliente\Index1.cshtml" />
     <Content Remove="Views\Cliente\Login.razor" />
+    <Content Remove="Views\Cochera\Disponible.cshtml" />
     <Content Remove="Views\Empleado\Delete - Copia.cshtml" />
   </ItemGroup>
 

@@ -1,0 +1,50 @@
+﻿@model IEnumerable<MVCBasic.Models.Cochera>
+
+@{
+    ViewData["Title"] = "Cocheras disponibles";
+}
+
+<h1>Reservar Cochera</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NumeroCochera)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Piso)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TipoCochera)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TipoVehiculo)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumeroCochera)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Piso)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoCochera)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoVehiculo)
+                </td>
+                <td>
+                    <a asp-action="Reservar" asp-route-id="@item.Id">Reservar Cochera</a> 
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

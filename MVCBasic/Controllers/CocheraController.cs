@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MVCBasic.Migrations;
 using MVCBasic.Models;
 using MVCBasico.Context;
 
@@ -202,8 +203,23 @@ namespace MVCBasic.Controllers
 
             return RedirectToAction("Dashboard", "Empleado");
         }
+        // GET - COCHERAS DISPONIBLES
+        public async Task<IActionResult> Disponibles(TipoVehiculo tipoVehiculo, TipoCochera tipoCochera)
+        {
+            var cocherasDisponibles = await _context.Cocheras
+                .Where(c => c.TipoVehiculo == tipoVehiculo && c.TipoCochera == tipoCochera)
+                .ToListAsync();
+            return View(cocherasDisponibles);
+        }
+        // GET - RESERVAR COCHERA
+        public ActionResult Reservar(int id)
+        {
+            ViewBag.CocheraId = id;
 
-         private bool CocheraExists(int id)
+            return RedirectToAction("Registrar", "Vehiculo", new { cocheraId = id });
+        }
+
+        private bool CocheraExists(int id)
         {
           return (_context.Cocheras?.Any(e => e.Id == id)).GetValueOrDefault();
         }

@@ -9,17 +9,45 @@
     <a class="btn btn-primary" asp-area="" asp-controller="Cochera" asp-action="Carga">Cargar Cocheras</a>
 } else
 {
-    <p>Hay @ViewBag.TotalCocheras cocheras totales</p>
-    <p> @ViewBag.Mensaje</p>
-}
-<form action="/Cliente/Busqueda" method="get">
-    <label for="persona">Buscar Persona por Nombre o Email:</label>
-    <input type="text" id="persona" name="busquedaPersona" placeholder="Ingrese nombre o email">
-    <input class="btn btn-primary" type="submit" value="Buscar">
-</form>
-<form action="/Vehiculo/Busqueda" method="get">
-    <label for="vehiculo">Buscar Vehículo por Patente:</label>
-    <input type="text" id="vehiculo" name="busquedaVehiculo" placeholder="Ingrese patente">
-    <input class="btn btn-primary" type="submit" value="Buscar">
-</form>
+    <div>
+        <p>Hay @ViewBag.TotalCocheras cocheras totales</p>
+        <p> @ViewBag.Mensaje</p>
+    </div>
 
+    <form action="/Cliente/Busqueda" method="get">
+        <label for="persona">Buscar Persona por Nombre o Email:</label>
+        <input type="text" id="persona" name="busquedaPersona" placeholder="Ingrese nombre o email">
+        <input class="btn btn-primary" type="submit" value="Buscar">
+    </form>
+    <form action="/Vehiculo/Busqueda" method="get">
+        <label for="vehiculo">Buscar Vehículo por Patente:</label>
+        <input type="text" id="vehiculo" name="busquedaVehiculo" placeholder="Ingrese patente">
+        <input class="btn btn-primary" type="submit" value="Buscar">
+    </form>
+    <form action="/Cochera/Disponibles" method="get">
+        <h4>Buscar Cocheras disponibles</h4>
+        <fieldset>
+            <legend>Tipo de Auto:</legend>
+            @foreach (var tipoVehiculo in Enum.GetValues(typeof(TipoVehiculo)))
+            {
+                <div>
+                    <input type="radio" id="@($"tipoVehiculo-{tipoVehiculo}")" name="tipoVehiculo" value="@tipoVehiculo">
+                    <label for="@($"tipoVehiculo-{tipoVehiculo}")">@tipoVehiculo</label>
+                </div>
+            }
+        </fieldset>
+        <fieldset>
+            <legend>Tipo de cochera:</legend>
+            @foreach (var tipoCochera in Enum.GetValues(typeof(TipoCochera)))
+            {
+                <input type="radio" id="@($"tipoCochera-{tipoCochera}")" name="tipoCochera" value="@tipoCochera">
+                <label for="@($"tipoCochera-{tipoCochera}")">@tipoCochera</label>
+                <br>
+            }
+        </fieldset>
+        <input class="btn btn-primary" type="submit" value="Buscar">
+    </form>
+
+
+
+}

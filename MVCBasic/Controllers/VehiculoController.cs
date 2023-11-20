@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MVCBasic.Migrations;
 using MVCBasic.Models;
 using MVCBasico.Context;
 
@@ -27,9 +28,43 @@ namespace MVCBasic.Controllers
             return View(vehiculos);
         }
         // GET: REGISTRAR VEHICULO
-        public IActionResult Create()
+        public IActionResult Registrar(int? cocheraId)
         {
+            ViewBag.CocheraId = cocheraId;
+
             return View();
+        }
+        // POST: REGISTRAR VEHICULO Y COCHERA
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegistrarVehiculoCochera(String Patente, TipoVehiculo Tipo, int cocheraId )
+        {
+            var vehiculoExistente = _context.Vehiculos.FirstOrDefault(v => v.Patente == Patente);
+            int vehiculoId;
+            if (vehiculoExistente != null)
+            {
+                vehiculoId = vehiculoExistente.Id;
+            } else
+            {
+                var nuevoVehiculo = new Vehiculo
+                {
+                    Patente = Patente,
+                    Tipo = Tipo
+                };
+                _context.Vehiculos.Add(nuevoVehiculo);
+                _context.SaveChanges();
+                vehiculoId = nuevoVehiculo.Id;
+            }
+            var cochera = _context.Cocheras.FirstOrDefault(c => c.Id == cocheraId);
+            if (cochera != null)
+            {
+                cochera.VehiculoId = vehiculoId;
+                _context.SaveChanges();
+            }
+            ViewBag.NumeroCochera = cochera.NumeroCochera;
+            ViewBag.NumeroPatente = Patente;
+            return View("Exito");
+
         }
         // POST: REGISTRAR VEHICULO
         [HttpPost]

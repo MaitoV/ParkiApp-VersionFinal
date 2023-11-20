@@ -1,0 +1,49 @@
+﻿@model MVCBasic.Models.Vehiculo
+
+@{
+    ViewData["Title"] = "Registrar Vehiculo";
+}
+
+<h1>Registrar un Nuevo Vehiculo</h1>
+
+<h4>Ingresar datos del Vehiculo</h4>
+<hr />
+@if (ViewBag.CocheraId != null)
+{
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="RegistrarVehiculoCochera">
+                <p class="text-danger">@ViewBag.ErrorMessage</p>
+                <div class="form-group">
+                    <label class="control-label">Numero de Cochera a reservar:</label>
+                    <input class="form-control" type="text" id="cocheraId" name="cocheraId" value="@ViewBag.CocheraId" readonly>
+                </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Patente" class="control-label"></label>
+                    <input asp-for="Patente" class="form-control" />
+                    <span asp-validation-for="Patente" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Tipo" class="control-label"></label>
+                    <select asp-for="Tipo" class="form-control" asp-items="Html.GetEnumSelectList<TipoVehiculo>()">
+                        <option selected="selected" value="">Please select</option>
+                    </select>
+                    <span asp-validation-for="Tipo" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Crear" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+} 
+<div>
+    <a asp-action="Dashboard">volver al Dashboard</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
