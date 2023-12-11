@@ -160,7 +160,12 @@ namespace MVCBasic.Controllers
         }
         public IActionResult Login()
         {
-            return View();
+            var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
+            if (legajoDeSesion.HasValue && legajoDeSesion != 0)
+            {
+                return View();
+            }
+            return RedirectToAction(nameof(Dashboard));
         }
         // POST: LOGIN DE USUARIO
         [HttpPost]

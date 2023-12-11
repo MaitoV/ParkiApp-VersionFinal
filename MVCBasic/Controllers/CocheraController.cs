@@ -14,6 +14,7 @@ namespace MVCBasic.Controllers
 {
     public class CocheraController : Controller
     {
+        private const string SessionID = "_UserID";
         private readonly EscuelaDatabaseContext _context;
 
         public CocheraController(EscuelaDatabaseContext context)

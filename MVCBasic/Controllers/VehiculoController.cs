@@ -13,6 +13,7 @@ namespace MVCBasic.Controllers
 {
     public class VehiculoController : Controller
     {
+        private const string SessionID = "_UserID";
         private readonly EscuelaDatabaseContext _context;
 
         public VehiculoController(EscuelaDatabaseContext context)
@@ -23,66 +24,88 @@ namespace MVCBasic.Controllers
         // GET: BUSQUEDA VEHICULOS
         public async Task<IActionResult> Busqueda(String busquedaVehiculo)
         {
-            var vehiculos = await _context.Vehiculos.Where(v => v.Patente.Contains(busquedaVehiculo)).ToListAsync();
+            var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
+            if (legajoDeSesion.HasValue && legajoDeSesion != 0)
+            {
+                var vehiculos = await _context.Vehiculos.Where(v => v.Patente.Contains(busquedaVehiculo)).ToListAsync();
 
-            return View(vehiculos);
+                return View(vehiculos);
+            }
+            return RedirectToAction("Index", "Home");
         }
         // GET: REGISTRAR VEHICULO
         public IActionResult Registrar(int? cocheraId)
         {
-            ViewBag.CocheraId = cocheraId;
+            var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
+            if (legajoDeSesion.HasValue && legajoDeSesion != 0)
+            {
+                ViewBag.CocheraId = cocheraId;
 
-            return View();
+                return View();
+            }
+            return RedirectToAction("Index", "Home");
         }
         // POST: REGISTRAR VEHICULO Y COCHERA
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RegistrarVehiculoCochera(String Patente, TipoVehiculo Tipo, int cocheraId )
         {
-            var vehiculoExistente = _context.Vehiculos.FirstOrDefault(v => v.Patente == Patente);
-            int vehiculoId;
-            if (vehiculoExistente != null)
+            var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
+            if (legajoDeSesion.HasValue && legajoDeSesion != 0)
             {
-                vehiculoId = vehiculoExistente.Id;
-            } else
-            {
-                var nuevoVehiculo = new Vehiculo
+                var vehiculoExistente = _context.Vehiculos.FirstOrDefault(v => v.Patente == Patente);
+                int vehiculoId;
+                if (vehiculoExistente != null)
                 {
-                    Patente = Patente,
-                    Tipo = Tipo
-                };
-                _context.Vehiculos.Add(nuevoVehiculo);
-                _context.SaveChanges();
-                vehiculoId = nuevoVehiculo.Id;
+                    vehiculoId = vehiculoExistente.Id;
+                }
+                else
+                {
+                    var nuevoVehiculo = new Vehiculo
+                    {
+                        Patente = Patente,
+                        Tipo = Tipo
+                    };
+                    _context.Vehiculos.Add(nuevoVehiculo);
+                    _context.SaveChanges();
+                    vehiculoId = nuevoVehiculo.Id;
+                }
+                var cochera = _context.Cocheras.FirstOrDefault(c => c.Id == cocheraId);
+                if (cochera != null)
+                {
+                    cochera.VehiculoId = vehiculoId;
+                    _context.SaveChanges();
+                }
+                ViewBag.NumeroCochera = cochera.NumeroCochera;
+                ViewBag.NumeroPatente = Patente;
+                return View("Exito");
             }
-            var cochera = _context.Cocheras.FirstOrDefault(c => c.Id == cocheraId);
-            if (cochera != null)
-            {
-                cochera.VehiculoId = vehiculoId;
-                _context.SaveChanges();
-            }
-            ViewBag.NumeroCochera = cochera.NumeroCochera;
-            ViewBag.NumeroPatente = Patente;
-            return View("Exito");
-
+            return RedirectToAction("Index", "Home");
         }
         // POST: REGISTRAR VEHICULO
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Patente,Tipo")] Vehiculo vehiculo)
         {
-            var vehiculoExistente = await _context.Vehiculos.FirstOrDefaultAsync(v => v.Patente == vehiculo.Patente);
-            if(vehiculoExistente != null)
+            var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
+            if (legajoDeSesion.HasValue && legajoDeSesion != 0)
             {
-                ViewBag.ErrorMessage = "No se pudo crear. Ya existe un vehículo con esa patente";
-                return View();
-            } else if (ModelState.IsValid)
-            {
-                _context.Add(vehiculo);
-                await _context.SaveChangesAsync();
+                var vehiculoExistente = await _context.Vehiculos.FirstOrDefaultAsync(v => v.Patente == vehiculo.Patente);
+                if (vehiculoExistente != null)
+                {
+                    ViewBag.ErrorMessage = "No se pudo crear. Ya existe un vehículo con esa patente";
+                    return View();
+                }
+                else if (ModelState.IsValid)
+                {
+                    _context.Add(vehiculo);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Dashboard", "Empleado");
+                }
                 return RedirectToAction("Dashboard", "Empleado");
             }
-            return View(vehiculo);
+            return RedirectToAction("Index", "Home");
+
         }
 
 
@@ -90,36 +113,46 @@ namespace MVCBasic.Controllers
         // GET: Vehiculo/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Vehiculos == null)
+            var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
+            if (legajoDeSesion.HasValue && legajoDeSesion != 0)
             {
-                return NotFound();
-            }
+                if (id == null || _context.Vehiculos == null)
+                {
+                    return NotFound();
+                }
 
-            var vehiculo = await _context.Vehiculos
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (vehiculo == null)
-            {
-                return NotFound();
-            }
+                var vehiculo = await _context.Vehiculos
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (vehiculo == null)
+                {
+                    return NotFound();
+                }
 
-            return View(vehiculo);
+                return View(vehiculo);
+            }
+            return RedirectToAction("Index", "Home");
         }
 
 
         // GET: Vehiculo/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Vehiculos == null)
+            var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
+            if (legajoDeSesion.HasValue && legajoDeSesion != 0)
             {
-                return NotFound();
-            }
+                if (id == null || _context.Vehiculos == null)
+                {
+                    return NotFound();
+                }
 
-            var vehiculo = await _context.Vehiculos.FindAsync(id);
-            if (vehiculo == null)
-            {
-                return NotFound();
+                var vehiculo = await _context.Vehiculos.FindAsync(id);
+                if (vehiculo == null)
+                {
+                    return NotFound();
+                }
+                return View(vehiculo);
             }
-            return View(vehiculo);
+            return RedirectToAction("Index", "Home");
         }
 
         // POST: Vehiculo/Edit/5
@@ -129,50 +162,60 @@ namespace MVCBasic.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Patente,Tipo")] Vehiculo vehiculo)
         {
-            if (id != vehiculo.Id)
+            var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
+            if (legajoDeSesion.HasValue && legajoDeSesion != 0)
             {
-                return NotFound();
-            }
+                if (id != vehiculo.Id)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(vehiculo);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!VehiculoExists(vehiculo.Id))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(vehiculo);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!VehiculoExists(vehiculo.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction("Dashboard", "Empleado");
                 }
-                return RedirectToAction("Dashboard", "Empleado");
+                return View(vehiculo);
             }
-            return View(vehiculo);
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: Vehiculo/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Vehiculos == null)
+            var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
+            if (legajoDeSesion.HasValue && legajoDeSesion != 0)
             {
-                return NotFound();
-            }
+                if (id == null || _context.Vehiculos == null)
+                {
+                    return NotFound();
+                }
 
-            var vehiculo = await _context.Vehiculos
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (vehiculo == null)
-            {
-                return NotFound();
-            }
+                var vehiculo = await _context.Vehiculos
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (vehiculo == null)
+                {
+                    return NotFound();
+                }
 
-            return View(vehiculo);
+                return View(vehiculo);
+            }
+            return RedirectToAction("Index", "Home");
         }
 
         // POST: Vehiculo/Delete/5
@@ -180,18 +223,23 @@ namespace MVCBasic.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Vehiculos == null)
+            var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
+            if (legajoDeSesion.HasValue && legajoDeSesion != 0)
             {
-                return Problem("Entity set 'EscuelaDatabaseContext.Vehiculos'  is null.");
+                if (_context.Vehiculos == null)
+                {
+                    return Problem("Entity set 'EscuelaDatabaseContext.Vehiculos'  is null.");
+                }
+                var vehiculo = await _context.Vehiculos.FindAsync(id);
+                if (vehiculo != null)
+                {
+                    _context.Vehiculos.Remove(vehiculo);
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Dashboard", "Empleado");
             }
-            var vehiculo = await _context.Vehiculos.FindAsync(id);
-            if (vehiculo != null)
-            {
-                _context.Vehiculos.Remove(vehiculo);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Dashboard", "Empleado");
+            return RedirectToAction("Index", "Home");
         }
 
         private bool VehiculoExists(int id)

@@ -16,7 +16,6 @@ namespace MVCBasic.Controllers
     public class ClienteController : Controller
     {
         private const string SessionID = "_UserID";
-        private const string SessionName = "_UserName";
         private readonly EscuelaDatabaseContext _context;
 
         public ClienteController(EscuelaDatabaseContext context)
@@ -27,30 +26,40 @@ namespace MVCBasic.Controllers
         // GET: BUSQUEDA DE CLIENTES
         public async Task<IActionResult> Busqueda(String busquedaPersona)
         {
-            var resultadoBusqueda = await _context.Clientes.Where(t =>
-           t.Nombre.Contains(busquedaPersona) ||
-           t.Apellido.Contains(busquedaPersona) ||
-           t.Email.Contains(busquedaPersona)).ToListAsync();
-            
-            return View(resultadoBusqueda);
+            var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
+            if (legajoDeSesion.HasValue && legajoDeSesion != 0)
+            {
+                var resultadoBusqueda = await _context.Clientes.Where(t =>
+                t.Nombre.Contains(busquedaPersona) ||
+                t.Apellido.Contains(busquedaPersona) ||
+                t.Email.Contains(busquedaPersona)).ToListAsync();
+
+                return View(resultadoBusqueda);
+            }
+            return RedirectToAction("Login", "Empleado");
         }
 
         // GET: Cliente/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Clientes == null)
+            var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
+            if (legajoDeSesion.HasValue && legajoDeSesion != 0)
             {
-                return NotFound();
-            }
+                if (id == null || _context.Clientes == null)
+                {
+                    return NotFound();
+                }
 
-            var cliente = await _context.Clientes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (cliente == null)
-            {
-                return NotFound();
-            }
+                var cliente = await _context.Clientes
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (cliente == null)
+                {
+                    return NotFound();
+                }
 
-            return View(cliente);
+                return View(cliente);
+            }
+            return RedirectToAction("Login", "Empleado");
         }
 
         // GET: REGISTRAR CLIENTE
@@ -85,17 +94,22 @@ namespace MVCBasic.Controllers
         // GET: Cliente/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Clientes == null)
+            var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
+            if (legajoDeSesion.HasValue && legajoDeSesion != 0)
             {
-                return NotFound();
-            }
+                if (id == null || _context.Clientes == null)
+                {
+                    return NotFound();
+                }
 
-            var cliente = await _context.Clientes.FindAsync(id);
-            if (cliente == null)
-            {
-                return NotFound();
+                var cliente = await _context.Clientes.FindAsync(id);
+                if (cliente == null)
+                {
+                    return NotFound();
+                }
+                return View(cliente);
             }
-            return View(cliente);
+            return RedirectToAction("Index", "Home");
         }
 
         // POST: Cliente/Edit/5
@@ -105,50 +119,60 @@ namespace MVCBasic.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Email,Id,Nombre,Apellido,password,Telefono")] Cliente cliente)
         {
-            if (id != cliente.Id)
+            var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
+            if (legajoDeSesion.HasValue && legajoDeSesion != 0)
             {
-                return NotFound();
-            }
+                if (id != cliente.Id)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(cliente);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ClienteExists(cliente.Id))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(cliente);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!ClienteExists(cliente.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction("Dashboard", "Empleado");
                 }
-                return RedirectToAction("Dashboard", "Empleado");
+                return View(cliente);
             }
-            return View(cliente);
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: Cliente/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Clientes == null)
+            var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
+            if (legajoDeSesion.HasValue && legajoDeSesion != 0)
             {
-                return NotFound();
-            }
+                if (id == null || _context.Clientes == null)
+                {
+                    return NotFound();
+                }
 
-            var cliente = await _context.Clientes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (cliente == null)
-            {
-                return NotFound();
-            }
+                var cliente = await _context.Clientes
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (cliente == null)
+                {
+                    return NotFound();
+                }
 
-            return View(cliente);
+                return View(cliente);
+            }
+            return RedirectToAction("Index", "Home");
         }
 
         // POST: Cliente/Delete/5
@@ -156,18 +180,23 @@ namespace MVCBasic.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Clientes == null)
+            var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
+            if (legajoDeSesion.HasValue && legajoDeSesion != 0)
             {
-                return Problem("Entity set 'EscuelaDatabaseContext.Clientes'  is null.");
+                if (_context.Clientes == null)
+                {
+                    return Problem("Entity set 'EscuelaDatabaseContext.Clientes'  is null.");
+                }
+                var cliente = await _context.Clientes.FindAsync(id);
+                if (cliente != null)
+                {
+                    _context.Clientes.Remove(cliente);
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Dashboard", "Empleado");
             }
-            var cliente = await _context.Clientes.FindAsync(id);
-            if (cliente != null)
-            {
-                _context.Clientes.Remove(cliente);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Dashboard", "Empleado");
+            return RedirectToAction("Login", "Empleado");
         }
         // GET: LOGIN DE USUARIO
         public IActionResult Login()
@@ -182,10 +211,7 @@ namespace MVCBasic.Controllers
 
             if (usuario != null && model.password == usuario.password)
             {
-                HttpContext.Session.SetString(SessionName, "Jarvik");
-                HttpContext.Session.SetInt32(SessionID, 24);
-                /*string usuarioJson = JsonConvert.SerializeObject(model);
-                HttpContext.Session.SetString("usuario", usuarioJson);*/
+                HttpContext.Session.SetInt32(SessionID, usuario.Id);
                 return RedirectToAction(nameof(Dashboard));
             }
 
@@ -196,6 +222,11 @@ namespace MVCBasic.Controllers
         // GET: DASHBOARD USUARIO
         public IActionResult Dashboard()
         {
+            var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
+            if (legajoDeSesion.HasValue && legajoDeSesion != 0)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
