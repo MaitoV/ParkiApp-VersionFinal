@@ -225,9 +225,9 @@ namespace MVCBasic.Controllers
             var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
             if (legajoDeSesion.HasValue && legajoDeSesion != 0)
             {
-                return RedirectToAction("Index", "Home");
+                return View();
             }
-            return View();
+            return RedirectToAction("Index", "Home");
         }
 
 

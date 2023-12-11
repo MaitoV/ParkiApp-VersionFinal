@@ -163,9 +163,10 @@ namespace MVCBasic.Controllers
             var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
             if (legajoDeSesion.HasValue && legajoDeSesion != 0)
             {
-                return View();
+                return RedirectToAction(nameof(Dashboard));
             }
-            return RedirectToAction(nameof(Dashboard));
+            return View();
+
         }
         // POST: LOGIN DE USUARIO
         [HttpPost]
