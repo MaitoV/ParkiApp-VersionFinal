@@ -12,12 +12,30 @@
         {
             app.UseSession(); // Habilitar la sesión en el middleware
 
-            // Configuración de otros middlewares y routing si es necesario
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                // Configurar manejo de errores en producción
+                app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
             app.UseRouting();
+
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers(); // Otra configuración de endpoints si es necesaria
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
-        }
+    }
 }

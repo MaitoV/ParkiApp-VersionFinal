@@ -8,13 +8,14 @@ using Microsoft.EntityFrameworkCore;
 using MVCBasic.Migrations;
 using MVCBasic.Models;
 using MVCBasico.Context;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Session;
 
 namespace MVCBasic.Controllers
 {
     public class EmpleadoController : Controller
     {
         private const string SessionID = "_UserID";
-        private const string SessionName = "_UserName";
         private readonly EscuelaDatabaseContext _context;
 
         public EmpleadoController(EscuelaDatabaseContext context)
@@ -169,10 +170,8 @@ namespace MVCBasic.Controllers
 
             if (usuario != null && model.password == usuario.password)
             {
-                //HttpContext.Session.SetString(SessionName, "Jarvik");
-                //HttpContext.Session.SetInt32(SessionID, 24);
-                /*string usuarioJson = JsonConvert.SerializeObject(model);
-                HttpContext.Session.SetString("usuario", usuarioJson);*/
+                HttpContext.Session.SetInt32(SessionID, usuario.NumeroLegajo);
+
                 return RedirectToAction(nameof(Dashboard));
             }
 
@@ -183,26 +182,34 @@ namespace MVCBasic.Controllers
         // GET: DASHBOARD EMPLEADO
         public IActionResult Dashboard()
         {
-            var cantidadCocheras = _context.Cocheras.Count();
-            if (cantidadCocheras != 0)
+            var legajoDeSesion = HttpContext.Session.GetInt32(SessionID);
+            if(legajoDeSesion.HasValue && legajoDeSesion != 0)
             {
-                int fijasLibres = _context.Cocheras.Count(c => c.TipoCochera == TipoCochera.FIJA && c.VehiculoId == null);
-                int ocasionalLibres = _context.Cocheras.Count(c => c.TipoCochera == TipoCochera.OCASIONAL && c.VehiculoId == null);
-                int autoLibres = _context.Cocheras.Count(c => c.TipoVehiculo == TipoVehiculo.AUTO && c.VehiculoId == null);
-                int motoLibres = _context.Cocheras.Count(c => c.TipoVehiculo == TipoVehiculo.MOTO && c.VehiculoId == null);
-                int camionetaLibres = _context.Cocheras.Count(c => c.TipoVehiculo == TipoVehiculo.CAMIONETA && c.VehiculoId == null);
-                int cocherasConVehiculo = _context.Cocheras.Count(c => c.VehiculoId != null);
+                var cantidadCocheras = _context.Cocheras.Count();
+                if (cantidadCocheras != 0)
+                {
+                    int fijasLibres = _context.Cocheras.Count(c => c.TipoCochera == TipoCochera.FIJA && c.VehiculoId == null);
+                    int ocasionalLibres = _context.Cocheras.Count(c => c.TipoCochera == TipoCochera.OCASIONAL && c.VehiculoId == null);
+                    int autoLibres = _context.Cocheras.Count(c => c.TipoVehiculo == TipoVehiculo.AUTO && c.VehiculoId == null);
+                    int motoLibres = _context.Cocheras.Count(c => c.TipoVehiculo == TipoVehiculo.MOTO && c.VehiculoId == null);
+                    int camionetaLibres = _context.Cocheras.Count(c => c.TipoVehiculo == TipoVehiculo.CAMIONETA && c.VehiculoId == null);
+                    int cocherasConVehiculo = _context.Cocheras.Count(c => c.VehiculoId != null);
 
-                ViewBag.AutoLibres = camionetaLibres;
-                ViewBag.MotoLibres = motoLibres;
-                ViewBag.CamionetaLibres = autoLibres;
-                ViewBag.FijasLibres = fijasLibres;
-                ViewBag.OcasionalLibres = ocasionalLibres;
-                ViewBag.CocherasLibres = cantidadCocheras - cocherasConVehiculo;
-                ViewBag.CocherasOcupadas = cocherasConVehiculo;
+                    ViewBag.AutoLibres = camionetaLibres;
+                    ViewBag.MotoLibres = motoLibres;
+                    ViewBag.CamionetaLibres = autoLibres;
+                    ViewBag.FijasLibres = fijasLibres;
+                    ViewBag.OcasionalLibres = ocasionalLibres;
+                    ViewBag.CocherasLibres = cantidadCocheras - cocherasConVehiculo;
+                    ViewBag.CocherasOcupadas = cocherasConVehiculo;
+                }
+                ViewBag.TotalCocheras = cantidadCocheras;
+                return View();
+            } else
+            {
+                return RedirectToAction(nameof(Login));
             }
-            ViewBag.TotalCocheras = cantidadCocheras;
-            return View();
+ 
         }
 
 
